@@ -17,6 +17,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NotFound from './pages/NotFound';
 import Ai from './components/Ai';
+import TermsAndServices from './pages/TermsAndServices';
 
 
 function App() {
@@ -145,7 +146,17 @@ function App() {
             )
           }
         />
-
+         <Route
+          path="/termsandservices"
+          element={
+            userData ? (
+              <TermsAndServices />
+            ) : (
+              <Navigate to="/login" state={{ from: location.pathname }} />
+            )
+          }
+        />
+        
         <Route path='*' element={<NotFound/>}/>
       </Routes>
       <Ai/>

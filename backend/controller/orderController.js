@@ -7,10 +7,15 @@ import dotenv from'dotenv'
 dotenv.config()
 import crypto from "crypto";
 const currency='inr'
-const razorpayInstance=new razorpay({
-  key_id:process.env.RAZORPAY_KEY_ID,
-  key_secret:process.env.RAZORPAY_KEY_SECRET,
-})
+
+// Initialize Razorpay only if credentials are provided
+let razorpayInstance = null;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  razorpayInstance = new razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+}
 //for user//
 export const placeOrder = async (req, res) => {
   try {
@@ -79,6 +84,10 @@ export const updateStatus = async (req, res) => {
 
 export const placeOrderRazorpay = async (req, res) => {
   try {
+    if (!razorpayInstance) {
+      return res.status(503).json({ message: "Razorpay is not configured. Please add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET to .env" });
+    }
+
     const { items, amount, address } = req.body;
     const userId = req.userId;
 
@@ -116,6 +125,10 @@ export const placeOrderRazorpay = async (req, res) => {
 
 export const verifyRazorpay = async (req, res) => {
   try {
+    if (!razorpayInstance) {
+      return res.status(503).json({ message: "Razorpay is not configured. Please add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET to .env" });
+    }
+
     const userId = req.userId;
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
