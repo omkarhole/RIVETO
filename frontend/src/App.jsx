@@ -18,7 +18,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import NotFound from './pages/NotFound';
 import Ai from './components/Ai';
 import TermsAndServices from './pages/TermsAndServices';
+import FaqPage from './pages/faqPage';
 
+import PrivicyPolicy from './pages/PrivicyPolicy';
 
 function App() {
   const { userData } = useContext(userDataContext);
@@ -137,6 +139,16 @@ function App() {
           }
         />
         <Route
+          path="/faqPage"
+          element={
+            userData ? (
+              <FaqPage />
+            ) : (
+              <Navigate to="/login" state={{ from: location.pathname }} />
+            )
+          }
+        />
+        <Route
           path="/order"
           element={
             userData ? (
@@ -146,7 +158,18 @@ function App() {
             )
           }
         />
-        <Route
+        
+           <Route
+          path="/privicypolicy"
+          element={
+            userData ? (
+              <PrivicyPolicy />
+            ) : (
+              <Navigate to="/login" state={{ from: location.pathname }} />
+            )
+          }
+        />
+          <Route
           path="/termsandservices"
           element={
             userData ? (
@@ -156,6 +179,7 @@ function App() {
             )
           }
         />
+        
         <Route path='*' element={<NotFound/>}/>
       </Routes>
       <Ai/>

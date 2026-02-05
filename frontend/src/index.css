@@ -18,4 +18,40 @@ body {
 .glow-logo {
   animation: glow 1.8s infinite ease-in-out;
 }
+
+/* Shimmer animation for cards */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.group:hover .group-hover\:animate-shimmer {
+  animation: shimmer 1.5s ease-in-out;
+}
+
+/* Scale 115 utility */
+.group-hover\:scale-115:hover {
+  transform: scale(1.15);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
 /* In your index.css or Tailwind config */
