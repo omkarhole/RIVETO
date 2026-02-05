@@ -146,7 +146,7 @@ function App() {
             )
           }
         />
-         <Route
+        <Route
           path="/termsandservices"
           element={
             userData ? (
@@ -156,7 +156,6 @@ function App() {
             )
           }
         />
-        
         <Route path='*' element={<NotFound/>}/>
       </Routes>
       <Ai/>
