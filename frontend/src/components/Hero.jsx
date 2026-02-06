@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { FaCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import gsap from 'gsap';
 
@@ -26,15 +26,6 @@ function Hero({ heroData, heroCount, setHeroCount }) {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
-
-  // Auto-rotate hero content
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroCount((prev) => (prev === 3 ? 0 : prev + 1));
-    }, 5000);
-    
-    return () => clearInterval(interval);
-  }, [setHeroCount]);
 
   useEffect(() => {
     // Animate entire container with parallax
@@ -97,21 +88,36 @@ function Hero({ heroData, heroCount, setHeroCount }) {
 
   const currentTheme = colorThemes[heroCount];
 
+  // Precompute particles once to avoid re-randomizing on each render
+  const particles = useMemo(() => {
+    const colors = ['#3b82f6', '#8b5cf6', '#06b6d4', '#ec4899'];
+    return [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      color1: colors[i % 4],
+      color2: colors[(i + 1) % 4],
+      delay: i * 0.3,
+      duration: 4 + Math.random() * 4,
+      glow: 10 + Math.random() * 20,
+    }));
+  }, []);
+
   return (
     <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
       {/* Animated Background Particles */}
       <div ref={particlesRef} className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle) => (
           <div
-            key={i}
+            key={particle.id}
             className={`absolute w-2 h-2 rounded-full animate-float opacity-40`}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              background: `linear-gradient(45deg, ${['#3b82f6', '#8b5cf6', '#06b6d4', '#ec4899'][i % 4]}, ${['#06b6d4', '#ec4899', '#8b5cf6', '#3b82f6'][i % 4]})`,
-              animationDelay: `${i * 0.3}s`,
-              animationDuration: `${4 + Math.random() * 4}s`,
-              boxShadow: `0 0 ${10 + Math.random() * 20}px ${['#3b82f6', '#8b5cf6', '#06b6d4', '#ec4899'][i % 4]}`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              background: `linear-gradient(45deg, ${particle.color1}, ${particle.color2})`,
+              animationDelay: `${particle.delay}s`,
+              animationDuration: `${particle.duration}s`,
+              boxShadow: `0 0 ${particle.glow}px ${particle.color1}`,
             }}
           />
         ))}

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { shopDataContext } from '../context/ShopContext';
 import { FaEye, FaHeart, FaShoppingCart, FaStar, FaCheck } from 'react-icons/fa';
@@ -125,10 +125,17 @@ function Card({ name, image, id, price, showQuickActions = true, badge, badgeCol
     navigate(`/productdetail/${id}`);
   };
 
-  // Generate random rating between 3.5 and 5 for demo purposes
-  const rating = (Math.random() * 1.5 + 3.5).toFixed(1);
-  const reviewCount = Math.floor(Math.random() * 100) + 15;
-  const discountPercent = Math.floor(Math.random() * 30) + 10;
+  // Generate stable random values based on product id
+  const { rating, reviewCount, discountPercent } = useMemo(() => {
+    // Use id as seed for deterministic random values
+    const seed = typeof id === 'string' ? id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : id;
+    const pseudoRandom = (offset) => ((seed * 9301 + offset * 49297) % 233280) / 233280;
+    return {
+      rating: (pseudoRandom(1) * 1.5 + 3.5).toFixed(1),
+      reviewCount: Math.floor(pseudoRandom(2) * 100) + 15,
+      discountPercent: Math.floor(pseudoRandom(3) * 30) + 10,
+    };
+  }, [id]);
   const originalPrice = (price * 1.3).toFixed(2);
 
   return (
